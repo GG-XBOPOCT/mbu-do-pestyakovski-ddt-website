@@ -68,9 +68,9 @@ def seed_data():
             ('Концерт ко Дню защиты детей', 'Праздничная программа от воспитанников ДДТ.', '2025-06-01', 1)
         ])
         c.executemany('INSERT INTO partners (name, website, project_id) VALUES (?, ?, ?)', [
-            ('Администрация района', 'https://ivobr.ru/mouopestyaki/ddt/', None),
-            ('Библиотека им. Пушкина', 'https://ivobr.ru/mouopestyaki/ddt/', 1),
-            ('Дом культуры', 'https://ivobr.ru/mouopestyaki/ddt/', 3)
+            ('Администрация района', 'https://pestyakovskij-r24.gosweb.gosuslugi.ru/', None),  # Обновленная ссылка
+            ('Библиотека им. Пушкина', 'http://lib-pestyaki.ivn.muzkult.ru/', 1),  # Обновленная ссылка
+            ('Дом культуры', 'https://pestyakovskij-r24.gosweb.gosuslugi.ru/spravochnik/kontsertnye-zaly/', 3)
         ])
     conn.commit()
     conn.close()
