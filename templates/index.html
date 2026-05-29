@@ -50,22 +50,27 @@
         h2 { font-size: 1.8rem; font-weight: 700; color: var(--text); position: relative; padding-bottom: 0.5rem; margin: 0; }
         h2::after { content: ''; position: absolute; bottom: 0; left: 0; width: 50px; height: 4px; background: var(--accent); border-radius: 2px; }
 
-        /* Увеличен отступ после заголовка "Партнёры" */
+        /* Увеличенный отступ после заголовка "Партнёры" */
+        #partners {
+            margin-bottom: 2rem;
+        }
         #partners h2 {
             margin-bottom: 2.5rem;
         }
 
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-        .card { background: var(--card); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); transition: 0.25s; }
+        .card { background: var(--card); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); border: 1px solid var(--border); transition: 0.25s; display: flex; flex-direction: column; }
         .card:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); border-color: var(--primary); }
         .card img { width: 100%; height: 180px; object-fit: cover; border-radius: 12px; margin-bottom: 1rem; background: linear-gradient(135deg, #e2e8f0, #cbd5e1); }
         .card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; font-weight: 600; }
-        .card p { color: var(--muted); font-size: 0.95rem; }
+        .card p { color: var(--muted); font-size: 0.95rem; flex-grow: 1; }
+        .card .read-more { margin-top: 1rem; display: inline-block; color: var(--primary); text-decoration: none; font-weight: 500; font-size: 0.9rem; }
+        .card .read-more:hover { text-decoration: underline; }
 
         .tag { display: inline-block; background: #dbeafe; color: var(--primary-dark); padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 500; margin-bottom: 0.75rem; }
         .date { color: var(--muted); font-size: 0.85rem; margin: 0.4rem 0; display: block; }
 
-        .partners { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem; }
+        .partners { display: flex; flex-wrap: wrap; gap: 1rem; }
         .partner { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem; text-align: center; flex: 1 1 200px; min-width: 180px; transition: 0.2s; }
         .partner:hover { border-color: var(--accent); box-shadow: var(--shadow); }
         .partner .icon { font-size: 2rem; margin-bottom: 0.5rem; display: block; }
@@ -153,17 +158,25 @@
     <section id="news">
         <div class="section-header">
             <h2>Новости</h2>
-            <a href="#news" class="btn-outline">📰 Все новости</a>
+            <a href="{{ dobro_feed_url }}" class="btn-outline" target="_blank">📰 Все новости</a>
         </div>
         <div class="grid">
             {% for item in news %}
             <div class="card">
-                {% if item.proj_title %}
+                {% if item.proj_title is defined and item.proj_title %}
                     <span class="tag">📂 {{ item.proj_title }}</span>
+                {% endif %}
+                {% if item.image %}
+                    <img src="{{ item.image }}" alt="{{ item.title }}">
                 {% endif %}
                 <h3>{{ item.title }}</h3>
                 <span class="date">📅 {{ item.date }}</span>
-                <p>{{ item.content }}</p>
+                {% if item.link %}
+                    <p>{{ item.description[:200] + '…' if item.description|length > 200 else item.description }}</p>
+                    <a href="{{ item.link }}" class="read-more" target="_blank">Читать далее →</a>
+                {% else %}
+                    <p>{{ item.content }}</p>
+                {% endif %}
             </div>
             {% endfor %}
         </div>
@@ -197,8 +210,8 @@
                 </p>
                 <p>📍 р.п. Пестяки, Ивановская область</p>
                 <p>📧 <a href="mailto:pesddt@yandex.ru">pesddt@yandex.ru</a></p>
-                <p>🌐 <a href="https://ivobr.ru/mouopestyaki/ddt/" target="_blank">Официальный сайт</a></p>
-                <p>💬 <a href="https://vk.com/public218228307" target="_blank">Группа ВКонтакте</a></p>
+                <p>🌐 <a href="{{ social.site }}" target="_blank">Официальный сайт</a></p>
+                <p>💬 <a href="{{ social.vk }}" target="_blank">Группа ВКонтакте</a></p>
             </div>
             <div>
                 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -234,9 +247,9 @@
                     Пестяковского района через волонтёрство.
                 </p>
                 <div class="socials">
-                    <a href="https://vk.com/public218228307" target="_blank" title="ВКонтакте">VK</a>
+                    <a href="{{ social.vk }}" target="_blank" title="ВКонтакте">VK</a>
                     <a href="mailto:pesddt@yandex.ru" title="Email">✉️</a>
-                    <a href="https://ivobr.ru/mouopestyaki/ddt/" target="_blank" title="Сайт">🌐</a>
+                    <a href="{{ social.site }}" target="_blank" title="Сайт">🌐</a>
                 </div>
             </div>
             <div class="footer-col">
@@ -249,12 +262,12 @@
             <div class="footer-col">
                 <h3>Контакты</h3>
                 <a href="mailto:pesddt@yandex.ru">pesddt@yandex.ru</a>
-                <a href="https://ivobr.ru/mouopestyaki/ddt/" target="_blank">Официальный сайт</a>
-                <a href="https://vk.com/public218228307" target="_blank">ВКонтакте</a>
+                <a href="{{ social.site }}" target="_blank">Официальный сайт</a>
+                <a href="{{ social.vk }}" target="_blank">ВКонтакте</a>
             </div>
         </div>
         <div class="copyright">
-            © 2026 МБУ ДО «Пестяковский ДДТ». Все права защищены. Создано с ❤️ для волонтёров.
+            © 2025 МБУ ДО «Пестяковский ДДТ». Все права защищены. Создано с ❤️ для волонтёров.
         </div>
     </footer>
 </body>
