@@ -1,0 +1,19 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ 'Редактировать партнёра' if partner else 'Новый партнёр' }}{% endblock %}
+{% block content %}
+<div class="card">
+    <h2>{{ 'Редактировать партнёра' if partner else 'Новый партнёр' }}</h2>
+    <form method="POST">
+        <input type="text" name="name" placeholder="Название" value="{{ partner.name if partner else '' }}" required>
+        <input type="url" name="website" placeholder="Сайт (https://...)" value="{{ partner.website if partner else '' }}">
+        <select name="project_id">
+            <option value="">— Без привязки —</option>
+            {% for p in projects %}
+                <option value="{{ p.id }}" {% if partner and partner.project_id == p.id %}selected{% endif %}>{{ p.title }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Сохранить</button>
+        <a href="{{ url_for('admin.partners') }}" style="margin-left: 1rem;">Отмена</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "admin/base.html" %}
+{% block title %}Новости{% endblock %}
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+        <h2>Новости</h2>
+        <a href="{{ url_for('admin.add_news') }}" class="btn btn-primary">➕ Добавить новость</a>
+    </div>
+    <table>
+        <tr><th>ID</th><th>Заголовок</th><th>Дата</th><th>Проект</th><th>Действия</th></tr>
+        {% for n in news %}
+        <tr>
+            <td>{{ n.id }}</td>
+            <td>{{ n.title }}</td>
+            <td>{{ n.date }}</td>
+            <td>{{ n.project_title if n.project_title else '—' }}</td>
+            <td>
+                <a href="{{ url_for('admin.edit_news', id=n.id) }}" class="btn btn-primary btn-sm">✏️</a>
+                <a href="{{ url_for('admin.delete_news', id=n.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Удалить новость?')">🗑️</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

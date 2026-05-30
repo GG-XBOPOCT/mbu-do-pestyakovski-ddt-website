@@ -1,0 +1,24 @@
+{% extends "admin/base.html" %}
+{% block title %}Проекты{% endblock %}
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+        <h2>Проекты</h2>
+        <a href="{{ url_for('admin.add_project') }}" class="btn btn-primary">➕ Добавить проект</a>
+    </div>
+    <table>
+        <tr><th>ID</th><th>Название</th><th>Описание</th><th>Действия</th></tr>
+        {% for p in projects %}
+        <tr>
+            <td>{{ p.id }}</td>
+            <td>{{ p.title }}</td>
+            <td>{{ p.description[:80] }}{% if p.description|length > 80 %}…{% endif %}</td>
+            <td>
+                <a href="{{ url_for('admin.edit_project', id=p.id) }}" class="btn btn-primary btn-sm">✏️</a>
+                <a href="{{ url_for('admin.delete_project', id=p.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Удалить проект?')">🗑️</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "admin/base.html" %}
+{% block title %}Партнёры{% endblock %}
+{% block content %}
+<div class="card">
+    <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+        <h2>Партнёры</h2>
+        <a href="{{ url_for('admin.add_partner') }}" class="btn btn-primary">➕ Добавить партнёра</a>
+    </div>
+    <table>
+        <tr><th>ID</th><th>Название</th><th>Сайт</th><th>Проект</th><th>Действия</th></tr>
+        {% for p in partners %}
+        <tr>
+            <td>{{ p.id }}</td>
+            <td>{{ p.name }}</td>
+            <td><a href="{{ p.website }}" target="_blank">{{ p.website[:30] }}{% if p.website|length > 30 %}…{% endif %}</a></td>
+            <td>{{ p.project_title if p.project_title else '—' }}</td>
+            <td>
+                <a href="{{ url_for('admin.edit_partner', id=p.id) }}" class="btn btn-primary btn-sm">✏️</a>
+                <a href="{{ url_for('admin.delete_partner', id=p.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Удалить партнёра?')">🗑️</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}
