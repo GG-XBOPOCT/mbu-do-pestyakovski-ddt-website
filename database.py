@@ -2,13 +2,11 @@ import sqlite3
 
 DB = 'volunteer.db'
 
-
 def get_db():
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
     conn.execute('PRAGMA foreign_keys = ON')
     return conn
-
 
 def init_db():
     conn = get_db()
@@ -51,7 +49,6 @@ def init_db():
     conn.commit()
     conn.close()
 
-
 def seed_data():
     conn = get_db()
     c = conn.cursor()
@@ -62,10 +59,9 @@ def seed_data():
             ('Экология', 'Уборка территорий и посадка деревьев в Пестяках.'),
             ('Забота о пожилых', 'Помощь пенсионерам: продукты, уборка, общение.')
         ])
-
         c.executemany('INSERT INTO partners (name, website, project_id) VALUES (?, ?, ?)', [
-            ('Администрация района', 'https://pestyakovskij-r24.gosweb.gosuslugi.ru/', None),  # Обновленная ссылка
-            ('Библиотека им. Пушкина', 'http://lib-pestyaki.ivn.muzkult.ru/', 1),  # Обновленная ссылка
+            ('Администрация района', 'https://pestyakovskij-r24.gosweb.gosuslugi.ru/', None),
+            ('Библиотека им. Пушкина', 'http://lib-pestyaki.ivn.muzkult.ru/', 1),
             ('Дом культуры', 'https://pestyakovskij-r24.gosweb.gosuslugi.ru/spravochnik/kontsertnye-zaly/', 3)
         ])
     conn.commit()

@@ -1,0 +1,10 @@
+{% extends "admin/base.html" %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+    <div class="card" style="text-align: center;"><h3>Проекты</h3><p style="font-size: 2rem;">{{ projects_count }}</p></div>
+    <div class="card" style="text-align: center;"><h3>Новости</h3><p style="font-size: 2rem;">{{ news_count }}</p></div>
+    <div class="card" style="text-align: center;"><h3>Партнёры</h3><p style="font-size: 2rem;">{{ partners_count }}</p></div>
+    <div class="card" style="text-align: center;"><h3>Заявки</h3><p style="font-size: 2rem;">{{ inquiries_count }}</p></div>
+</div>
+{% endblock %}

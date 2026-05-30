@@ -5,9 +5,13 @@ import requests
 import json
 import re
 from bs4 import BeautifulSoup
+from admin import admin_bp
 
 app = Flask(__name__)
 app.secret_key = 'pestyaki-ddt-secret'
+
+# Регистрация админ-панели
+app.register_blueprint(admin_bp)
 
 
 def fetch_dobro_news():
@@ -37,7 +41,6 @@ def fetch_dobro_news():
         data = json.loads(next_data_script.string)
 
         # Ищем посты в структуре dehydratedState
-        # Обычно они лежат в props.pageProps.dehydratedState.queries[0].state.data.pages[0].data
         queries = data.get('props', {}).get('pageProps', {}).get('dehydratedState', {}).get('queries', [])
         posts_data = None
         for query in queries:
@@ -59,24 +62,16 @@ def fetch_dobro_news():
 
             # Дата
             created_at = post.get('createdAt', '')
-            # Преобразуем "2026-05-05T08:03:35+03:00" -> "2026-05-05"
-            if created_at:
-                date_iso = created_at[:10]
-            else:
-                date_iso = ''
+            date_iso = created_at[:10] if created_at else ''
 
             # Описание – HTML-текст, очищаем от тегов
             raw_description = post.get('description', '')
-            # Удаляем HTML-теги (включая <br> заменяем на пробел)
             clean_description = re.sub(r'<br\s*/?>', ' ', raw_description)
             clean_description = re.sub(r'<[^>]+>', '', clean_description)
-            # Убираем лишние пробелы
             clean_description = ' '.join(clean_description.split())
-            # Ограничиваем длину для карточки (например, 300 символов)
             short_description = clean_description[:300] + '…' if len(clean_description) > 300 else clean_description
 
-            # Заголовок – можно взять первые 100 символов описания или вырезать первую фразу
-            # Лучше: первое предложение до точки или до первого перевода строки
+            # Заголовок – первое предложение из описания
             title = clean_description.split('.')[0].strip()
             if len(title) > 100:
                 title = title[:97] + '…'
